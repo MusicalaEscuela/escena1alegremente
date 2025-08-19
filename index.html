@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AlegreMente 2025 · Escena 1</title>
+<meta name="description" content="Guía completa para aprender y montar la Escena 1: El sol no canta / Mi cuerpo es solo mío." />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Barra superior -->
+<header class="top">
+  <div class="topbar wrap">
+    <div class="brand">
+      <img src="logo.jpg" alt="Logo Musicala" width="36" height="36" style="border-radius:10px; object-fit:cover" />
+      <div>
+        <h1>AlegreMente 2025 · Guía de Escena</h1>
+        <small class="muted">Escena 1 · El sol no canta / Mi cuerpo es solo mío</small>
+      </div>
+    </div>
+    <a class="btn-back" href="index.html">⬅ Volver al menú</a>
+  </div>
+</header>
+
+<!-- Reproductor -->
+<div class="playerbar">
+  <div class="player wrap">
+    <label for="sceneAudio">🎶 Audio: “Mi cuerpo es solo mío”</label>
+    <!-- sin src aquí: se define por JS con encodeURI -->
+    <audio id="sceneAudio" preload="auto" controls playsinline></audio>
+    <button id="btnPlay" class="btn" title="Reproducir / Pausar">▶ Reproducir</button>
+  </div>
+</div>
+
+<!-- Filtros por arte / centro / logística -->
+<div class="filters">
+  <div class="wrap">
+    <div class="filter-group" id="grp-areas">
+      <h4>Arte</h4>
+      <span class="chip" data-type="area" data-area="teatro">Teatro</span>
+      <span class="chip" data-type="area" data-area="musica">Música/Coro</span>
+      <span class="chip" data-type="area" data-area="plastica">Artes plásticas</span>
+      <span class="chip" data-type="area" data-area="danza">Danza</span>
+      <span class="chip" data-type="area" data-area="luces">Luces</span>
+      <span class="chip" data-type="area" data-area="sonido">Sonido</span>
+      <span class="chip" data-type="area" data-area="produccion">Producción/Logística</span>
+    </div>
+
+    <div class="filter-group" id="grp-centros">
+      <h4>Centro</h4>
+      <span class="chip" data-type="centro" data-centro="lucero">Lucero</span>
+      <span class="chip" data-type="centro" data-centro="padre">Padre Misericordioso</span>
+      <span class="chip" data-type="centro" data-centro="gmmmc">GMMMC</span>
+      <!-- Puedes agregar más centros globales si lo necesitas:
+      <span class="chip" data-type="centro" data-centro="colegio">Colegio</span>
+      <span class="chip" data-type="centro" data-centro="arroyo">Arroyo</span> -->
+    </div>
+
+    <div class="filter-group" id="grp-log">
+      <h4>Logística</h4>
+      <span class="chip" data-type="log" data-log="vestuario">Vestuario</span>
+      <span class="chip" data-type="log" data-log="sonido">Sonido (general)</span>
+      <span class="chip" data-type="log" data-log="diademas">Diademas</span>
+      <span class="chip" data-type="log" data-log="amplificacion-coro">Amplificación coro</span>
+      <span class="chip" data-type="log" data-log="orquesta">Orquesta</span>
+      <span class="chip" data-type="log" data-log="proyeccion">Proyección fondo</span>
+      <span class="chip" data-type="log" data-log="materiales">Materiales plásticos</span>
+      <span class="chip" data-type="log" data-log="luces">Luces</span>
+    </div>
+
+    <div class="toolbar">
+      <button id="btnSoloMiArte" class="btn">⭐ Solo mi arte</button>
+      <button id="btnClearFilters" class="btn">Limpiar</button>
+      <div class="search">
+        <input id="q" type="search" placeholder="Buscar en la escena…" aria-label="Buscar" />
+      </div>
+      <button id="btnShare" class="btn">🔗 Compartir vista</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <!-- Imagen principal -->
+  <div class="hero">
+    <img src="Escena 1.jpg" alt="Escena 1: El sol no canta / Mi cuerpo es solo mío" />
+  </div>
+
+  <div class="grid">
+    <!-- COLUMNA PRINCIPAL -->
+    <section>
+      <!-- Resumen -->
+      <div class="card" data-tags="general produccion" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>Resumen en 30 segundos</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <p>Sofía llega a un mundo apagado. Una figura invade su espacio sin permiso. Niñas y niños entran con mensajes de consentimiento y forman un círculo protector. Sofía afirma: <em>“Mi cuerpo… es solo mío.”</em> El sol vuelve a brillar; inicia la danza de liberación.</p>
+          <div class="tools">
+            <span class="pill">Duración: 5–7 min</span>
+            <span class="pill">Lenguajes: Teatro · Danza · Artes Plásticas</span>
+            <span class="pill">Música: Orquesta + Coro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Propósito -->
+      <div class="card" data-tags="general" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>🎯 Propósito pedagógico</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul>
+            <li><strong>Comprender</strong> el mensaje de autonomía corporal y consentimiento.</li>
+            <li><strong>Reconocer</strong> señales de incomodidad y rutas seguras para pedir ayuda.</li>
+            <li><strong>Participar</strong> con roles simples (carteles, rayos del sol, coro) sin requerir técnica artística.</li>
+          </ul>
+          <p class="note">No hay contacto físico real en escena. Toda la tensión se resuelve con <strong>coreografía segura</strong> y distancia.</p>
+        </div>
+      </div>
+
+      <!-- Acción -->
+      <div class="card" data-tags="teatro danza" data-centros="lucero padre" data-log="">
+        <header onclick="toggle(this)"><h2>🎭 Acción paso a paso</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ol>
+            <li>Entra Sofía; fondo con <em>sol gris</em> sin luz.</li>
+            <li>La figura sombría acecha (sin tocar); Sofía muestra incomodidad.</li>
+            <li>Ingresan niñas/niños con carteles: “¿Puedo darte un abrazo?” · “No sin tu permiso” · “Tú decides”.</li>
+            <li>Forman círculo protector; Sofía dice: <em>“Mi cuerpo… es solo mío.”</em></li>
+            <li>El sol comienza a iluminarse y se prepara la transición a danza.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Danza -->
+      <div class="card" data-tags="danza" data-centros="padre" data-log="">
+        <header onclick="toggle(this)"><h2>💃 Danza (contemporáneo / danza-teatro)</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul>
+            <li><strong>Inicio:</strong> movimientos cerrados y rígidos.</li>
+            <li><strong>Desarrollo:</strong> apertura progresiva; brazos al cielo; giros en libertad.</li>
+            <li><strong>Final:</strong> Sofía al centro, postura fuerte; el sol dorado brilla.</li>
+          </ul>
+          <p>Referencia opcional: <a href="https://www.youtube.com/watch?v=K5KAc5CoCuk&start=0" target="_blank" rel="noreferrer">Indila – Dernière Danse (≈2 min)</a>.</p>
+        </div>
+      </div>
+
+      <!-- Plástica -->
+      <div class="card" data-tags="plastica produccion" data-centros="gmmmc" data-log="materiales proyeccion">
+        <header onclick="toggle(this)"><h2>🎨 Imagen plástica en escena</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul>
+            <li><strong>Sol transformable:</strong> círculo grande (icopor) con CDs por el lado brillante; rayos con palos de colores insertables.</li>
+            <li><strong>Silueta iluminada de Sofía</strong> (figura/tela con luz interna tenue).</li>
+            <li><strong>Acción simbólica:</strong> cada niño agrega un “rayo” de color al círculo.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Luces -->
+      <div class="card" data-tags="luces tecnica" data-centros="gmmmc" data-log="luces proyeccion">
+        <header onclick="toggle(this)"><h2>🎛️ Luces y transiciones (cue rápido)</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <table>
+            <thead><tr><th>Cue</th><th>Estado</th><th>Detalle</th></tr></thead>
+            <tbody>
+              <tr><td><b>L1 – Inicio</b></td><td>Oscuro + spot neutro</td><td>Sol gris sin iluminación directa.</td></tr>
+              <tr><td><b>L2 – Tensión</b></td><td>Strobe sutil</td><td>Uso breve durante el acecho (avisado).</td></tr>
+              <tr><td><b>L3 – Círculo protector</b></td><td>Lavado cálido</td><td>Entrada de carteles y rayos.</td></tr>
+              <tr><td><b>L4 – Resolución</b></td><td>Cálido brillante en sol</td><td>Tras la frase de Sofía; activar luz de silueta.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sonido -->
+      <div class="card" data-tags="sonido tecnica musica produccion" data-centros="lucero padre gmmmc" data-log="sonido diademas amplificacion-coro orquesta">
+        <header onclick="toggle(this)"><h2>🔊 Requerimientos de sonido</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul>
+            <li><b>Pista / guía:</b> “Mi cuerpo es solo mío” lista para prueba (<span class="muted">o referencia de orquesta+coro</span>).</li>
+            <li><b>Diademas inalámbricas:</b> <span class="muted">según reparto (definir # exacto)</span>.</li>
+            <li><b>Amplificación de coro:</b> microfonía adecuada y monitores.</li>
+            <li><b>Orquesta:</b> refuerzo según rider general.</li>
+            <li><b>Proyección fondo:</b> coordinación audio–video para cambios de estado.</li>
+          </ul>
+          <p class="muted">⚠️ Completar cantidades exactas en la planilla técnica.</p>
+        </div>
+      </div>
+
+      <!-- Checklist -->
+      <div class="card" data-tags="general produccion tecnica danza teatro plastica musica" data-centros="lucero padre gmmmc" data-log="vestuario luces sonido proyeccion materiales orquesta">
+        <header onclick="toggle(this)"><h2>✅ Checklist (pre-ensayo y función)</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul id="check-escena1">
+            <li>[ ] Carteles listos (3+ frases) y visibles.</li>
+            <li>[ ] Sol montado (estructura + CDs + rayos/palos).</li>
+            <li>[ ] Spot inicial y cue list probados.</li>
+            <li>[ ] Marcaciones de distancia para escena de tensión.</li>
+            <li>[ ] Pista/guía musical lista (orquesta/coro o referencia).</li>
+            <li>[ ] Roles asignados (Sofía, figura, 5+ niños con carteles, equipo de rayos).</li>
+          </ul>
+          <div class="actions">
+            <button class="btn" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+            <button class="btn" onclick="copyChecklist()">📋 Copiar checklist</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guión PDF -->
+      <div class="card" id="guion-escena" data-tags="teatro produccion" data-centros="lucero" data-log="">
+        <header onclick="toggle(this)"><h2>📄 Guión de la escena (PDF)</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <div class="actions">
+            <a id="pdfView" class="btn" href="#" target="_blank" rel="noreferrer">👁️ Ver en pestaña</a>
+            <a id="pdfDownload" class="btn" href="#" download>⬇ Descargar</a>
+          </div>
+          <iframe id="pdfFrame" class="pdf-frame" title="Guión Escena I" loading="lazy"></iframe>
+          <p id="pdfFallback" class="note" style="display:none">Tu navegador bloqueó el visor embebido. Usa los botones de arriba para verlo o descargarlo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLUMNA LATERAL -->
+    <aside>
+      <div class="card" data-tags="produccion" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>👥 Centros y responsables</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul>
+            <li><b>Teatro:</b> Lucero</li>
+            <li><b>Danza:</b> Padre Misericordioso (A)</li>
+            <li><b>Plástica:</b> GMMMC (sol y rayos)</li>
+          </ul>
+          <p class="muted">Sugerencia: 1 responsable de comunicación por escena.</p>
+        </div>
+      </div>
+
+      <div class="card" data-tags="produccion plastica" data-centros="gmmmc" data-log="materiales vestuario proyeccion">
+        <header onclick="toggle(this)"><h2>📦 Materiales clave</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul>
+            <li>Vestuario Sofía: blanco + tocado de flores. <span class="pill">vestuario</span></li>
+            <li>Figura sombría: negro + máscara. <span class="pill">vestuario</span></li>
+            <li>Niñas/niños: ropa de colores. <span class="pill">vestuario</span></li>
+            <li>Carteles de consentimiento (mín. 3). <span class="pill">materiales</span></li>
+            <li>Sol de icopor + CDs + rayos/palos de colores. <span class="pill">materiales</span></li>
+            <li>Proyector para fondo (sol gris → dorado). <span class="pill">proyección</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Recursos por arte (se filtra con los chips) -->
+      <div class="card" data-tags="recursos danza teatro plastica musica luces sonido produccion" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>📂 Recursos por arte</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <ul id="res-list" style="list-style:none; padding-left:0; margin:0"></ul>
+        </div>
+      </div>
+
+      <div class="card" data-tags="general" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>❓ Preguntas rápidas</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <details class="summary"><summary><b>¿Puedo participar sin saber actuar o bailar?</b></summary><p>Sí. Puedes llevar carteles, manejar los rayos del sol, ayudar en luces o en logística de entradas.</p></details>
+          <details class="summary"><summary><b>¿Qué pasa si me pongo nervioso?</b></summary><p>Tenemos marcaciones claras y acciones simples. Practica 1 vez el recorrido y usa la checklist.</p></details>
+          <details class="summary"><summary><b>¿Hay contacto físico?</b></summary><p>No. Todo se resuelve con lenguaje corporal y distancia segura.</p></details>
+        </div>
+      </div>
+
+      <div class="card" data-tags="general tecnica" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>🧠 Glosario breve</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <p><span class="kbd">cue</span>: orden/estado de luces o sonido.</p>
+          <p><span class="kbd">spot</span>: luz puntual dirigida a una persona/objeto.</p>
+          <p><span class="kbd">strobe</span>: luz intermitente (usar con precaución).</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Botón volver al final (único) -->
+  <div class="wrap center">
+    <a class="btn-back" href="index.html">⬅ Volver al menú</a>
+  </div>
+
+  <div class="footer">AlegreMente 2025 · Escena 1 · Guía práctica para todo público</div>
+</main>
+
+<script src="script.js" defer></script>
+</body>
+</html>
