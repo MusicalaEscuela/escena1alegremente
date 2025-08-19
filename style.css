@@ -21,8 +21,15 @@ header.top{position:sticky; top:0; z-index:30; background:rgba(255,255,255,.9); 
 .player label{font-size:14px; color:#374151}
 audio{width:100%}
 
-/* Barra de filtros */
-.filters{position:sticky; top:106px; z-index:24; background:rgba(255,255,255,.9); border-bottom:1px solid var(--bd); backdrop-filter:saturate(180%) blur(8px)}
+/* Barra de filtros (YA NO STICKY) */
+.filters{
+  position:static;              /* antes: sticky */
+  top:auto;                     /* limpieza de valores sticky */
+  z-index:auto;                 /* ya no necesita stacking alto */
+  background:rgba(255,255,255,.9);
+  border-bottom:1px solid var(--bd);
+  backdrop-filter:saturate(180%) blur(8px);
+}
 .filters .wrap{display:flex; gap:12px; align-items:flex-start; padding:10px 16px; flex-wrap:wrap}
 .filter-group{display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:#fff; border:1px solid var(--bd); border-radius:12px; padding:8px 10px}
 .filter-group h4{margin:0 8px 0 0; font-size:12px; color:#4b5563; text-transform:uppercase; letter-spacing:.04em}
