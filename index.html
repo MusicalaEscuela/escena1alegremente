@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AlegreMente 2025 · Escena 1</title>
-<meta name="description" content="Guía completa para aprender y montar la Escena 1: El sol no canta / Mi cuerpo es solo mío." />
-<link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AlegreMente 2025 · Escena 1</title>
+  <meta name="description" content="Guía completa para aprender y montar la Escena 1: El sol no canta / Mi cuerpo es solo mío." />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -27,7 +27,6 @@
 <div class="playerbar">
   <div class="player wrap">
     <label for="sceneAudio">🎶 Audio: “Mi cuerpo es solo mío”</label>
-    <!-- sin src aquí: se define por JS con encodeURI -->
     <audio id="sceneAudio" preload="auto" controls playsinline></audio>
     <button id="btnPlay" class="btn" title="Reproducir / Pausar">▶ Reproducir</button>
   </div>
@@ -52,9 +51,6 @@
       <span class="chip" data-type="centro" data-centro="lucero">Lucero</span>
       <span class="chip" data-type="centro" data-centro="padre">Padre Misericordioso</span>
       <span class="chip" data-type="centro" data-centro="gmmmc">GMMMC</span>
-      <!-- Puedes agregar más centros globales si lo necesitas:
-      <span class="chip" data-type="centro" data-centro="colegio">Colegio</span>
-      <span class="chip" data-type="centro" data-centro="arroyo">Arroyo</span> -->
     </div>
 
     <div class="filter-group" id="grp-log">
@@ -70,12 +66,9 @@
     </div>
 
     <div class="toolbar">
-      <button id="btnSoloMiArte" class="btn">⭐ Solo mi arte</button>
-      <button id="btnClearFilters" class="btn">Limpiar</button>
       <div class="search">
         <input id="q" type="search" placeholder="Buscar en la escena…" aria-label="Buscar" />
       </div>
-      <button id="btnShare" class="btn">🔗 Compartir vista</button>
     </div>
   </div>
 </div>
@@ -129,28 +122,37 @@
         </div>
       </div>
 
-      <!-- Danza -->
-      <div class="card" data-tags="danza" data-centros="padre" data-log="">
-        <header onclick="toggle(this)"><h2>💃 Danza (contemporáneo / danza-teatro)</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul>
-            <li><strong>Inicio:</strong> movimientos cerrados y rígidos.</li>
-            <li><strong>Desarrollo:</strong> apertura progresiva; brazos al cielo; giros en libertad.</li>
-            <li><strong>Final:</strong> Sofía al centro, postura fuerte; el sol dorado brilla.</li>
-          </ul>
-          <p>Referencia opcional: <a href="https://www.youtube.com/watch?v=K5KAc5CoCuk&start=0" target="_blank" rel="noreferrer">Indila – Dernière Danse (≈2 min)</a>.</p>
-        </div>
-      </div>
-
       <!-- Plástica -->
       <div class="card" data-tags="plastica produccion" data-centros="gmmmc" data-log="materiales proyeccion">
         <header onclick="toggle(this)"><h2>🎨 Imagen plástica en escena</h2><span class="caret">Contraer</span></header>
         <div class="content">
           <ul>
+            <li><strong>Fondo (proyección):</strong> <code>fondo1.jpg</code></li>
+            <li><strong>Elementos en escenario:</strong> <code>elemento1-1.jpg</code></li>
             <li><strong>Sol transformable:</strong> círculo grande (icopor) con CDs por el lado brillante; rayos con palos de colores insertables.</li>
             <li><strong>Silueta iluminada de Sofía</strong> (figura/tela con luz interna tenue).</li>
             <li><strong>Acción simbólica:</strong> cada niño agrega un “rayo” de color al círculo.</li>
           </ul>
+
+          <div class="stage-assets">
+            <div class="asset">
+              <h4>Fondo (proyección)</h4>
+              <a href="fondo1.jpg" data-preview>
+                <img src="fondo1.jpg" alt="Fondo de la escena (fondo1.jpg)">
+              </a>
+              <p class="muted">Archivo: <code>fondo1.jpg</code></p>
+            </div>
+
+            <div class="asset">
+              <h4>Elementos en escenario</h4>
+              <div class="asset-grid">
+                <a href="elemento1-1.jpg" data-preview>
+                  <img src="elemento1-1.jpg" alt="Elemento de escenografía (elemento1-1.jpg)">
+                </a>
+              </div>
+              <p class="muted">Archivo(s): <code>elemento1-1.jpg</code></p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -216,6 +218,19 @@
           <p id="pdfFallback" class="note" style="display:none">Tu navegador bloqueó el visor embebido. Usa los botones de arriba para verlo o descargarlo.</p>
         </div>
       </div>
+
+      <!-- Partitura PDF (NUEVO) -->
+      <div class="card" id="partitura-escena" data-tags="musica produccion" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>🎼 Partitura (PDF)</h2><span class="caret">Contraer</span></header>
+        <div class="content">
+          <div class="actions">
+            <a id="pdfViewPart" class="btn" href="#" target="_blank" rel="noreferrer">👁️ Ver en pestaña</a>
+            <a id="pdfDownloadPart" class="btn" href="#" download>⬇ Descargar</a>
+          </div>
+          <iframe id="pdfFramePart" class="pdf-frame" title="Partitura · Mi cuerpo es solo mío" loading="lazy"></iframe>
+          <p id="pdfFallbackPart" class="note" style="display:none">Tu navegador bloqueó el visor embebido. Usa los botones de arriba para verlo o descargarlo.</p>
+        </div>
+      </div>
     </section>
 
     <!-- COLUMNA LATERAL -->
@@ -246,7 +261,7 @@
         </div>
       </div>
 
-      <!-- Recursos por arte (se filtra con los chips) -->
+      <!-- Recursos por arte -->
       <div class="card" data-tags="recursos danza teatro plastica musica luces sonido produccion" data-centros="lucero padre gmmmc" data-log="">
         <header onclick="toggle(this)"><h2>📂 Recursos por arte</h2><span class="caret">Contraer</span></header>
         <div class="content">
@@ -254,14 +269,16 @@
         </div>
       </div>
 
-      <div class="card" data-tags="general" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>❓ Preguntas rápidas</h2><span class="caret">Contraer</span></header>
+      <!-- Docentes (nuevo) -->
+      <div class="card" data-tags="produccion general" data-centros="lucero padre gmmmc" data-log="">
+        <header onclick="toggle(this)"><h2>👩‍🏫 Docentes</h2><span class="caret">Contraer</span></header>
         <div class="content">
-          <details class="summary"><summary><b>¿Puedo participar sin saber actuar o bailar?</b></summary><p>Sí. Puedes llevar carteles, manejar los rayos del sol, ayudar en luces o en logística de entradas.</p></details>
-          <details class="summary"><summary><b>¿Qué pasa si me pongo nervioso?</b></summary><p>Tenemos marcaciones claras y acciones simples. Practica 1 vez el recorrido y usa la checklist.</p></details>
-          <details class="summary"><summary><b>¿Hay contacto físico?</b></summary><p>No. Todo se resuelve con lenguaje corporal y distancia segura.</p></details>
+          <ul id="teachers-list" class="teacher-list" style="list-style:none; padding-left:0; margin:0"></ul>
+          <p class="muted" style="margin-top:8px">Sugerencia: cada docente puede tener su mini guía con materiales y tareas.</p>
         </div>
       </div>
+
+      <!-- (Se eliminó el bloque de ❓ Preguntas rápidas) -->
 
       <div class="card" data-tags="general tecnica" data-centros="lucero padre gmmmc" data-log="">
         <header onclick="toggle(this)"><h2>🧠 Glosario breve</h2><span class="caret">Contraer</span></header>
@@ -282,6 +299,35 @@
   <div class="footer">AlegreMente 2025 · Escena 1 · Guía práctica para todo público</div>
 </main>
 
+<!-- Script pequeño SOLO para la Partitura (no toca tu script.js) -->
+<script>
+(function(){
+  // Cambia el nombre si tu PDF de partitura se llama distinto:
+  const PARTITURA_FILE = 'Mi cuerpo es solo mio Partitura.pdf';
+
+  const url   = encodeURI(PARTITURA_FILE);
+  const frame = document.getElementById('pdfFramePart');
+  const view  = document.getElementById('pdfViewPart');
+  const down  = document.getElementById('pdfDownloadPart');
+  const fb    = document.getElementById('pdfFallbackPart');
+
+  if (view) view.href = url;
+  if (down) down.href = url;
+
+  // Probar disponibilidad y cargar en iframe
+  fetch(url, { method: 'HEAD' })
+    .then(r => {
+      if (!r.ok) throw new Error('no disponible');
+      frame.src = url + '#toolbar=1&navpanes=0&statusbar=0&view=FitH';
+    })
+    .catch(() => {
+      frame.style.display = 'none';
+      fb.style.display = 'block';
+    });
+})();
+</script>
+
+<!-- Tu JS general (audio, filtros, visor del guion, etc.) -->
 <script src="script.js" defer></script>
 </body>
 </html>
