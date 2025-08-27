@@ -205,13 +205,11 @@ function copyChecklist(){
 
   // ==== DOCENTES ====
   const TEACHERS = [
-    { name: 'Brenda',  url: 'docentes/brenda.html',  areas: ['teatro'],   centros: ['lucero','arroyo','padre'] },
-    { name: 'Thalia',  url: 'docentes/thalia.html',  areas: ['teatro'],   centros: ['lucero'] },
-    { name: 'Yusting', url: 'docentes/yusting.html', areas: ['danza'],    centros: ['padre','arroyo','jerusalen'] },
-    { name: 'Camila',  url: 'docentes/camila.html',  areas: ['danza'],    centros: ['santodomingo','padre','jerusalen'] },
-    { name: 'Santiago', url: 'docentes/santiago.html', areas: ['plastica'], centros: ['jerusalen','lucero','padre','colegio','gmmmc'] },
-    { name: 'Leydy',    url: 'docentes/leydy.html',    areas: ['plastica'], centros: ['santodomingo','lucero','arroyo'] },
-    { name: 'Angie',    url: 'docentes/angie.html',    areas: ['plastica'], centros: ['colegio','jerusalen'] }
+    { name: 'Angie Nitola',  url: 'docentes/brenda.html',  areas: ['teatro'],   centros: ['lucero','arroyo','padre'] },
+    { name: 'Erika López', url: 'docentes/yusting.html', areas: ['danza'],    centros: ['padre','arroyo','jerusalen'] },
+    { name: 'Leydy Díaz',    url: 'docentes/leydy.html',    areas: ['plastica'], centros: ['santodomingo','lucero','arroyo'] },
+    { name: 'Camila Pirajan',  url: 'docentes/camila.html',  areas: ['danza'],    centros: ['santodomingo','padre','jerusalen'] },
+    { name: 'Santiago Gutiérrez', url: 'docentes/santiago.html', areas: ['plastica'], centros: ['jerusalen','lucero','padre','colegio','gmmmc'] },
   ];
 
   function renderTeachers(){
