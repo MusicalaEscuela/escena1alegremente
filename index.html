@@ -3,331 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AlegreMente 2025 · Escena 1</title>
-  <meta name="description" content="Guía completa para aprender y montar la Escena 1: El sol no canta / Mi cuerpo es solo mío." />
+  <title>AlegreMente · Guía de Escena</title>
+  <meta name="description" content="Plantilla base para todas las escenas de AlegreMente." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-<!-- Barra superior -->
-<header class="top">
-  <div class="topbar wrap">
-    <div class="brand">
-      <img src="logo.jpg" alt="Logo Musicala" width="36" height="36" style="border-radius:10px; object-fit:cover" />
-      <div>
-        <h1>AlegreMente 2025 · Guía de Escena</h1>
-        <small class="muted">Escena 1 · El sol no canta / Mi cuerpo es solo mío</small>
+  <!-- Topbar -->
+  <header class="top">
+    <div class="topbar wrap">
+      <div class="brand">
+        <img src="logo.jpg" alt="Logo Musicala" width="36" height="36" />
+        <div>
+          <h1 id="sc-title">AlegreMente · Guía de Escena</h1>
+          <small id="sc-subtitle" class="muted">Cargando…</small>
+        </div>
       </div>
+      <a class="btn-back" href="https://musicalaescuela.github.io/AlegreMente-2025/">⬅ Volver al menú</a>
     </div>
-    <a class="btn-back" href="index.html">⬅ Volver al menú</a>
+  </header>
+
+  <!-- Player -->
+  <div class="playerbar">
+    <div class="player wrap" id="player-area" hidden>
+      <label id="audio-label">🎶 Audio</label>
+      <audio id="scene-audio" preload="auto" controls playsinline></audio>
+      <button id="btnPlay" class="btn">▶ Reproducir</button>
+    </div>
   </div>
-</header>
 
-<!-- Reproductor -->
-<div class="playerbar">
-  <div class="player wrap">
-    <label for="sceneAudio">🎶 Audio: “Mi cuerpo es solo mío”</label>
-    <audio id="sceneAudio" preload="auto" controls playsinline></audio>
-    <button id="btnPlay" class="btn" title="Reproducir / Pausar">▶ Reproducir</button>
-  </div>
-</div>
+  <!-- Filtros -->
+  <div class="filters">
+    <div class="wrap">
+      <div class="filter-group" id="chips-areas"><h4>Arte</h4></div>
+      <div class="filter-group" id="chips-centros"><h4>Centro</h4></div>
+      <div class="filter-group" id="chips-log"><h4>Logística</h4></div>
 
-<!-- Filtros por arte / centro / logística -->
-<div class="filters">
-  <div class="wrap">
-    <div class="filter-group" id="grp-areas">
-      <h4>Arte</h4>
-      <span class="chip" data-type="area" data-area="teatro">Teatro</span>
-      <span class="chip" data-type="area" data-area="musica">Música/Coro</span>
-      <span class="chip" data-type="area" data-area="plastica">Artes plásticas</span>
-      <span class="chip" data-type="area" data-area="danza">Danza</span>
-      <span class="chip" data-type="area" data-area="luces">Luces</span>
-      <span class="chip" data-type="area" data-area="sonido">Sonido</span>
-      <span class="chip" data-type="area" data-area="produccion">Producción/Logística</span>
-    </div>
-
-    <div class="filter-group" id="grp-centros">
-      <h4>Centro</h4>
-      <span class="chip" data-type="centro" data-centro="lucero">Lucero</span>
-      <span class="chip" data-type="centro" data-centro="padre">Padre Misericordioso</span>
-      <span class="chip" data-type="centro" data-centro="gmmmc">GMMMC</span>
-    </div>
-
-    <div class="filter-group" id="grp-log">
-      <h4>Logística</h4>
-      <span class="chip" data-type="log" data-log="vestuario">Vestuario</span>
-      <span class="chip" data-type="log" data-log="sonido">Sonido (general)</span>
-      <span class="chip" data-type="log" data-log="diademas">Diademas</span>
-      <span class="chip" data-type="log" data-log="amplificacion-coro">Amplificación coro</span>
-      <span class="chip" data-type="log" data-log="orquesta">Orquesta</span>
-      <span class="chip" data-type="log" data-log="proyeccion">Proyección fondo</span>
-      <span class="chip" data-type="log" data-log="materiales">Materiales plásticos</span>
-      <span class="chip" data-type="log" data-log="luces">Luces</span>
-    </div>
-
-    <div class="toolbar">
-      <div class="search">
-        <input id="q" type="search" placeholder="Buscar en la escena…" aria-label="Buscar" />
+      <div class="toolbar">
+        <div class="search"><input id="q" type="search" placeholder="Buscar…" /></div>
       </div>
     </div>
   </div>
-</div>
 
-<main class="wrap">
-  <!-- Imagen principal -->
-  <div class="hero">
-    <img src="Escena 1.jpg" alt="Escena 1: El sol no canta / Mi cuerpo es solo mío" />
-  </div>
+  <!-- Contenido -->
+  <main class="wrap">
+    <div class="hero"><img id="hero-img" alt="Imagen de portada" /></div>
+    <div class="grid">
+      <section id="col-main"></section>
+      <aside id="col-aside"></aside>
+    </div>
 
-  <div class="grid">
-    <!-- COLUMNA PRINCIPAL -->
-    <section>
-      <!-- Resumen -->
-      <div class="card" data-tags="general produccion" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>Resumen en 30 segundos</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <p>Sofía llega a un mundo apagado. Una figura invade su espacio sin permiso. Niñas y niños entran con mensajes de consentimiento y forman un círculo protector. Sofía afirma: <em>“Mi cuerpo… es solo mío.”</em> El sol vuelve a brillar; inicia la danza de liberación.</p>
-          <div class="tools">
-            <span class="pill">Duración: 5–7 min</span>
-            <span class="pill">Lenguajes: Teatro · Danza · Artes Plásticas</span>
-            <span class="pill">Música: Orquesta + Coro</span>
-          </div>
-        </div>
-      </div>
+    <div class="wrap center">
+      <a class="btn-back" href="https://musicalaescuela.github.io/AlegreMente-2025/">⬅ Volver al menú</a>
+    </div>
+    <div class="footer" id="footer-note">AlegreMente · Cargando escena…</div>
+  </main>
 
-      <!-- Propósito -->
-      <div class="card" data-tags="general" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>🎯 Propósito pedagógico</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul>
-            <li><strong>Comprender</strong> el mensaje de autonomía corporal y consentimiento.</li>
-            <li><strong>Reconocer</strong> señales de incomodidad y rutas seguras para pedir ayuda.</li>
-            <li><strong>Participar</strong> con roles simples (carteles, rayos del sol, coro) sin requerir técnica artística.</li>
-          </ul>
-          <p class="note">No hay contacto físico real en escena. Toda la tensión se resuelve con <strong>coreografía segura</strong> y distancia.</p>
-        </div>
-      </div>
-
-      <!-- Acción -->
-      <div class="card" data-tags="teatro danza" data-centros="lucero padre" data-log="">
-        <header onclick="toggle(this)"><h2>🎭 Acción paso a paso</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ol>
-            <li>Entra Sofía; fondo con <em>sol gris</em> sin luz.</li>
-            <li>La figura sombría acecha (sin tocar); Sofía muestra incomodidad.</li>
-            <li>Ingresan niñas/niños con carteles: “¿Puedo darte un abrazo?” · “No sin tu permiso” · “Tú decides”.</li>
-            <li>Forman círculo protector; Sofía dice: <em>“Mi cuerpo… es solo mío.”</em></li>
-            <li>El sol comienza a iluminarse y se prepara la transición a danza.</li>
-          </ol>
-        </div>
-      </div>
-
-      <!-- Plástica -->
-      <div class="card" data-tags="plastica produccion" data-centros="gmmmc" data-log="materiales proyeccion">
-        <header onclick="toggle(this)"><h2>🎨 Imagen plástica en escena</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul>
-            <li><strong>Fondo (proyección):</strong> <code>fondo1.jpg</code></li>
-            <li><strong>Elementos en escenario:</strong> <code>elemento1-1.jpg</code></li>
-            <li><strong>Sol transformable:</strong> círculo grande (icopor) con CDs por el lado brillante; rayos con palos de colores insertables.</li>
-            <li><strong>Silueta iluminada de Sofía</strong> (figura/tela con luz interna tenue).</li>
-            <li><strong>Acción simbólica:</strong> cada niño agrega un “rayo” de color al círculo.</li>
-          </ul>
-
-          <div class="stage-assets">
-            <div class="asset">
-              <h4>Fondo (proyección)</h4>
-              <a href="fondo1.jpg" data-preview>
-                <img src="fondo1.jpg" alt="Fondo de la escena (fondo1.jpg)">
-              </a>
-              <p class="muted">Archivo: <code>fondo1.jpg</code></p>
-            </div>
-
-            <div class="asset">
-              <h4>Elementos en escenario</h4>
-              <div class="asset-grid">
-                <a href="elemento1-1.jpg" data-preview>
-                  <img src="elemento1-1.jpg" alt="Elemento de escenografía (elemento1-1.jpg)">
-                </a>
-              </div>
-              <p class="muted">Archivo(s): <code>elemento1-1.jpg</code></p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Luces -->
-      <div class="card" data-tags="luces tecnica" data-centros="gmmmc" data-log="luces proyeccion">
-        <header onclick="toggle(this)"><h2>🎛️ Luces y transiciones (cue rápido)</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <table>
-            <thead><tr><th>Cue</th><th>Estado</th><th>Detalle</th></tr></thead>
-            <tbody>
-              <tr><td><b>L1 – Inicio</b></td><td>Oscuro + spot neutro</td><td>Sol gris sin iluminación directa.</td></tr>
-              <tr><td><b>L2 – Tensión</b></td><td>Strobe sutil</td><td>Uso breve durante el acecho (avisado).</td></tr>
-              <tr><td><b>L3 – Círculo protector</b></td><td>Lavado cálido</td><td>Entrada de carteles y rayos.</td></tr>
-              <tr><td><b>L4 – Resolución</b></td><td>Cálido brillante en sol</td><td>Tras la frase de Sofía; activar luz de silueta.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Sonido -->
-      <div class="card" data-tags="sonido tecnica musica produccion" data-centros="lucero padre gmmmc" data-log="sonido diademas amplificacion-coro orquesta">
-        <header onclick="toggle(this)"><h2>🔊 Requerimientos de sonido</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul>
-            <li><b>Pista / guía:</b> “Mi cuerpo es solo mío” lista para prueba (<span class="muted">o referencia de orquesta+coro</span>).</li>
-            <li><b>Diademas inalámbricas:</b> <span class="muted">según reparto (definir # exacto)</span>.</li>
-            <li><b>Amplificación de coro:</b> microfonía adecuada y monitores.</li>
-            <li><b>Orquesta:</b> refuerzo según rider general.</li>
-            <li><b>Proyección fondo:</b> coordinación audio–video para cambios de estado.</li>
-          </ul>
-          <p class="muted">⚠️ Completar cantidades exactas en la planilla técnica.</p>
-        </div>
-      </div>
-
-      <!-- Checklist -->
-      <div class="card" data-tags="general produccion tecnica danza teatro plastica musica" data-centros="lucero padre gmmmc" data-log="vestuario luces sonido proyeccion materiales orquesta">
-        <header onclick="toggle(this)"><h2>✅ Checklist (pre-ensayo y función)</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul id="check-escena1">
-            <li>[ ] Carteles listos (3+ frases) y visibles.</li>
-            <li>[ ] Sol montado (estructura + CDs + rayos/palos).</li>
-            <li>[ ] Spot inicial y cue list probados.</li>
-            <li>[ ] Marcaciones de distancia para escena de tensión.</li>
-            <li>[ ] Pista/guía musical lista (orquesta/coro o referencia).</li>
-            <li>[ ] Roles asignados (Sofía, figura, 5+ niños con carteles, equipo de rayos).</li>
-          </ul>
-          <div class="actions">
-            <button class="btn" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
-            <button class="btn" onclick="copyChecklist()">📋 Copiar checklist</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Guión PDF -->
-      <div class="card" id="guion-escena" data-tags="teatro produccion" data-centros="lucero" data-log="">
-        <header onclick="toggle(this)"><h2>📄 Guión de la escena (PDF)</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <div class="actions">
-            <a id="pdfView" class="btn" href="#" target="_blank" rel="noreferrer">👁️ Ver en pestaña</a>
-            <a id="pdfDownload" class="btn" href="#" download>⬇ Descargar</a>
-          </div>
-          <iframe id="pdfFrame" class="pdf-frame" title="Guión Escena I" loading="lazy"></iframe>
-          <p id="pdfFallback" class="note" style="display:none">Tu navegador bloqueó el visor embebido. Usa los botones de arriba para verlo o descargarlo.</p>
-        </div>
-      </div>
-
-      <!-- Partitura PDF (NUEVO) -->
-      <div class="card" id="partitura-escena" data-tags="musica produccion" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>🎼 Partitura (PDF)</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <div class="actions">
-            <a id="pdfViewPart" class="btn" href="#" target="_blank" rel="noreferrer">👁️ Ver en pestaña</a>
-            <a id="pdfDownloadPart" class="btn" href="#" download>⬇ Descargar</a>
-          </div>
-          <iframe id="pdfFramePart" class="pdf-frame" title="Partitura · Mi cuerpo es solo mío" loading="lazy"></iframe>
-          <p id="pdfFallbackPart" class="note" style="display:none">Tu navegador bloqueó el visor embebido. Usa los botones de arriba para verlo o descargarlo.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- COLUMNA LATERAL -->
-    <aside>
-      <div class="card" data-tags="produccion" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>👥 Centros y responsables</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul>
-            <li><b>Teatro:</b> Lucero</li>
-            <li><b>Danza:</b> Padre Misericordioso (A)</li>
-            <li><b>Plástica:</b> GMMMC (sol y rayos)</li>
-          </ul>
-          <p class="muted">Sugerencia: 1 responsable de comunicación por escena.</p>
-        </div>
-      </div>
-
-      <div class="card" data-tags="produccion plastica" data-centros="gmmmc" data-log="materiales vestuario proyeccion">
-        <header onclick="toggle(this)"><h2>📦 Materiales clave</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul>
-            <li>Vestuario Sofía: blanco + tocado de flores. <span class="pill">vestuario</span></li>
-            <li>Figura sombría: negro + máscara. <span class="pill">vestuario</span></li>
-            <li>Niñas/niños: ropa de colores. <span class="pill">vestuario</span></li>
-            <li>Carteles de consentimiento (mín. 3). <span class="pill">materiales</span></li>
-            <li>Sol de icopor + CDs + rayos/palos de colores. <span class="pill">materiales</span></li>
-            <li>Proyector para fondo (sol gris → dorado). <span class="pill">proyección</span></li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Recursos por arte -->
-      <div class="card" data-tags="recursos danza teatro plastica musica luces sonido produccion" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>📂 Recursos por arte</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul id="res-list" style="list-style:none; padding-left:0; margin:0"></ul>
-        </div>
-      </div>
-
-      <!-- Docentes (nuevo) -->
-      <div class="card" data-tags="produccion general" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>👩‍🏫 Docentes</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <ul id="teachers-list" class="teacher-list" style="list-style:none; padding-left:0; margin:0"></ul>
-          <p class="muted" style="margin-top:8px">Sugerencia: cada docente puede tener su mini guía con materiales y tareas.</p>
-        </div>
-      </div>
-
-      <!-- (Se eliminó el bloque de ❓ Preguntas rápidas) -->
-
-      <div class="card" data-tags="general tecnica" data-centros="lucero padre gmmmc" data-log="">
-        <header onclick="toggle(this)"><h2>🧠 Glosario breve</h2><span class="caret">Contraer</span></header>
-        <div class="content">
-          <p><span class="kbd">cue</span>: orden/estado de luces o sonido.</p>
-          <p><span class="kbd">spot</span>: luz puntual dirigida a una persona/objeto.</p>
-          <p><span class="kbd">strobe</span>: luz intermitente (usar con precaución).</p>
-        </div>
-      </div>
-    </aside>
-  </div>
-
-  <!-- Botón volver al final (único) -->
-  <div class="wrap center">
-    <a class="btn-back" href="index.html">⬅ Volver al menú</a>
-  </div>
-
-  <div class="footer">AlegreMente 2025 · Escena 1 · Guía práctica para todo público</div>
-</main>
-
-<!-- Script pequeño SOLO para la Partitura (no toca tu script.js) -->
-<script>
-(function(){
-  // Cambia el nombre si tu PDF de partitura se llama distinto:
-  const PARTITURA_FILE = 'Mi cuerpo es solo mio Partitura.pdf';
-
-  const url   = encodeURI(PARTITURA_FILE);
-  const frame = document.getElementById('pdfFramePart');
-  const view  = document.getElementById('pdfViewPart');
-  const down  = document.getElementById('pdfDownloadPart');
-  const fb    = document.getElementById('pdfFallbackPart');
-
-  if (view) view.href = url;
-  if (down) down.href = url;
-
-  // Probar disponibilidad y cargar en iframe
-  fetch(url, { method: 'HEAD' })
-    .then(r => {
-      if (!r.ok) throw new Error('no disponible');
-      frame.src = url + '#toolbar=1&navpanes=0&statusbar=0&view=FitH';
-    })
-    .catch(() => {
-      frame.style.display = 'none';
-      fb.style.display = 'block';
-    });
-})();
-</script>
-
-<!-- Tu JS general (audio, filtros, visor del guion, etc.) -->
-<script src="script.js" defer></script>
+  <!-- Script: carga la escena por ?scene=escena1 (o escenas/escena1.json por defecto) -->
+  <script src="script.js" type="module"></script>
 </body>
 </html>
