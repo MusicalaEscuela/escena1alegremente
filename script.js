@@ -1,375 +1,457 @@
-/******************************
- *  Plegables y checklist
- ******************************/
-function toggle(h){
-  const card = h.parentElement;
-  const content = card.querySelector('.content');
-  const caret = h.querySelector('.caret');
-  const open = content.style.display !== 'none';
-  content.style.display = open ? 'none' : 'block';
-  if (caret) caret.textContent = open ? 'Expandir' : 'Contraer';
-}
+/* script.js (module)
+   Plantilla genérica para guías de escenas de AlegreMente.
+   Carga la escena desde JSON/JS y renderiza todas las secciones.
+*/
 
-// Mostrar todo abierto por defecto
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.card .content').forEach(c => c.style.display = 'block');
-});
+/* ====================== Utils ====================== */
+const $  = (s, ctx = document) => ctx.querySelector(s);
+const $$ = (s, ctx = document) => Array.from(ctx.querySelectorAll(s));
 
-function copyChecklist(){
-  const items = Array.from(document.querySelectorAll('#check-escena1 li'))
-    .map(li => li.textContent.trim()).join('\n');
-  navigator.clipboard.writeText(items || 'Checklist no encontrada');
-  alert('Checklist copiada al portapapeles.');
-}
+/* ====================== Loader ====================== */
+async function loadConfig() {
+  const setStatus = (msg) => {
+    const sub  = $('#sc-subtitle');
+    const foot = $('#footer-note');
+    if (sub)  sub.textContent  = msg || '';
+    if (foot) foot.textContent = msg || '';
+  };
 
-/******************************
- *  Audio robusto (autoplay-friendly)
- ******************************/
-(function(){
-  const audio = document.getElementById('sceneAudio');
-  const btn = document.getElementById('btnPlay');
-  if (!audio || !btn) return;
+  const url = new URL(location.href);
+  const id  = url.searchParams.get('scene') || 'escena1';
 
-  const sources = [
-    'Mi cuerpo es solo mío.mp3',
-    'Mi cuerpo es solo mio.mp3',
-    'mi-cuerpo-es-solo-mio.mp3'
+  // Compat: si ya hay datos globales (por versiones anteriores)
+  if (window.__SCENE__ || window.CONFIG_ESCENA) {
+    setStatus('');
+    return window.__SCENE__ || window.CONFIG_ESCENA;
+  }
+
+  // Rutas candidatas (JSON preferido; fallback a JS)
+  const candidates = [
+    `escenas/${id}.json`,
+    `${id}.json`,
+    `escenas/${id}.js`,
+    `${id}.js`
   ];
-  let currentSrcIdx = 0;
 
-  function setEncodedSrc(filename){
-    const cacheBuster = `?v=${Date.now()}`;
-    audio.src = encodeURI(filename) + cacheBuster;
-  }
-  setEncodedSrc(sources[currentSrcIdx]);
-
-  function markBlocked(){
-    btn.style.borderColor = '#f59e0b';
-    btn.style.boxShadow = '0 0 0 3px rgba(245,158,11,.25)';
-    btn.title = 'Tu navegador bloqueó el autoplay. Toca cualquier parte para iniciar.';
-  }
-  function updateBtn(){
-    btn.textContent = audio.paused ? '▶ Reproducir' : '⏸️ Pausar';
-  }
-
-  async function tryPlay(){
+  for (const path of candidates) {
     try {
-      await audio.play();
-      updateBtn();
-    } catch {
-      markBlocked(); updateBtn();
-    }
+      if (path.endsWith('.json')) {
+        const r = await fetch(`${path}?v=${Date.now()}`);
+        if (!r.ok) throw 0;
+        const data = await r.json();
+        setStatus('');
+        return data;
+      } else {
+        await import(`${path}?v=${Date.now()}`);
+        const data = window.__SCENE__ || window.CONFIG_ESCENA;
+        if (!data) throw new Error('El JS no definió __SCENE__ ni CONFIG_ESCENA');
+        setStatus('');
+        return data;
+      }
+    } catch (e) { /* intenta siguiente ruta */ }
   }
 
-  // Intento de autoplay al cargar
-  document.addEventListener('DOMContentLoaded', tryPlay);
+  const msg = `⚠ No pude cargar la escena. Verifica el nombre (?scene=...), la ruta del archivo y que no abras como file://`;
+  setStatus(msg);
+  throw new Error(msg);
+}
 
-  // Habilitar reproducción con la primera interacción
-  const playOnInteract = () => { audio.play().then(updateBtn).catch(()=>{}); };
-  window.addEventListener('pointerdown', playOnInteract, {once:true, capture:true});
-  window.addEventListener('keydown', playOnInteract, {once:true, capture:true});
-  window.addEventListener('touchstart', playOnInteract, {once:true, capture:true});
+/* ====================== Builders ====================== */
+function makeCard({ title, tag = 'div', attrs = {}, collapsible = true, open = true }) {
+  const el = document.createElement('div');
+  el.className = 'card';
+  Object.entries(attrs).forEach(([k, v]) => { if (v != null) el.dataset[k] = v; });
 
-  // Botón
+  const header = document.createElement('header');
+  const h2 = document.createElement('h2');
+  h2.textContent = title;
+  const caret = document.createElement('span');
+  caret.className = 'caret';
+  caret.textContent = open ? 'Contraer' : 'Expandir';
+  header.append(h2, caret);
+
+  const content = document.createElement(tag);
+  content.className = 'content';
+  if (!open) content.style.display = 'none';
+
+  if (collapsible) {
+    header.addEventListener('click', () => {
+      const vis = content.style.display !== 'none';
+      content.style.display = vis ? 'none' : 'block';
+      caret.textContent = vis ? 'Expandir' : 'Contraer';
+    });
+  }
+
+  el.append(header, content);
+  return { el, content };
+}
+
+function pills(arr) {
+  return (arr || []).map(t => `<span class="pill">${t}</span>`).join('');
+}
+
+function listFrom(items) {
+  const ul = document.createElement('ul');
+  (items || []).forEach(t => {
+    const li = document.createElement('li');
+    li.innerHTML = t;
+    ul.appendChild(li);
+  });
+  return ul;
+}
+
+function tableFrom(rows, headers) {
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  thead.innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+  const tbody = document.createElement('tbody');
+  (rows || []).forEach(r => {
+    const tr = document.createElement('tr');
+    headers.forEach(h => {
+      const td = document.createElement('td');
+      td.innerHTML = r[h] ?? '';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.append(thead, tbody);
+  return table;
+}
+
+/* ====================== Filtros ====================== */
+function buildChipList(containerSelector, values, dataKey) {
+  const c = $(containerSelector);
+  if (!c) return;
+  (values || []).forEach(val => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.dataset[dataKey] = val;
+    chip.textContent = val;
+    chip.addEventListener('click', () => { chip.classList.toggle('active'); applyFilters(); });
+    c.appendChild(chip);
+  });
+}
+
+function getFilters() {
+  const areas   = $$('#chips-areas .chip.active').map(x => x.dataset.area);
+  const centros = $$('#chips-centros .chip.active').map(x => x.dataset.centro);
+  const logs    = $$('#chips-log .chip.active').map(x => x.dataset.log);
+  const q = ($('#q')?.value || '').toLowerCase();
+  return { areas, centros, logs, q };
+}
+
+function applyFilters() {
+  const st = getFilters();
+  // Solo filtra el contenido principal
+  $$('#col-main .card').forEach(card => {
+    const tags    = (card.dataset.tags || '').split(/\s+/).filter(Boolean);
+    const centros = (card.dataset.centros || '').split(/\s+/).filter(Boolean);
+    const logs    = (card.dataset.log || '').split(/\s+/).filter(Boolean);
+    const textOk  = (card.textContent || '').toLowerCase().includes(st.q);
+    const areaOk  = !st.areas.length   || st.areas.some(a => tags.includes(a));
+    const cenOk   = !st.centros.length || st.centros.some(c => centros.includes(c));
+    const logOk   = !st.logs.length    || st.logs.some(l => logs.includes(l));
+    card.style.display = (textOk && areaOk && cenOk && logOk) ? '' : 'none';
+  });
+}
+
+/* ====================== Render: top & audio ====================== */
+function renderTop(meta = {}) {
+  $('#sc-title').textContent    = meta.title || 'AlegreMente · Guía de Escena';
+  $('#sc-subtitle').textContent = meta.subtitle || '';
+  const foot = $('#footer-note');
+  if (foot) foot.textContent = meta.footer || '';
+  const hero = $('#hero-img');
+  if (hero && meta.images?.hero) {
+    hero.src = meta.images.hero;
+    hero.alt = meta.images.heroAlt || 'Imagen de portada';
+  }
+}
+
+function renderAudio(audio) {
+  if (!audio) return;
+  const area = $('#player-area');
+  const label = $('#audio-label');
+  const el = $('#scene-audio');
+  const btn = $('#btnPlay');
+  if (!area || !el || !btn) return;
+
+  area.hidden = false;
+  label.textContent = audio.label || '🎶 Audio';
+
+  const list = Array.isArray(audio.sources) ? audio.sources : [audio.src].filter(Boolean);
+  let idx = 0;
+
+  const setSrc = (s) => { el.src = encodeURI(s) + `?v=${Date.now()}`; };
+  setSrc(list[idx]);
+
+  const tryNext = () => { if (idx < list.length - 1) { idx++; setSrc(list[idx]); el.play().catch(()=>{}); } };
+  el.addEventListener('error', tryNext);
+
+  const updateBtn = () => { btn.textContent = el.paused ? '▶ Reproducir' : '⏸️ Pausar'; };
   btn.addEventListener('click', async () => {
-    try {
-      if (audio.paused) { await audio.play(); } else { audio.pause(); }
-    } catch(e) {}
+    try { if (el.paused) await el.play(); else el.pause(); } catch {}
     updateBtn();
   });
+  el.addEventListener('play', updateBtn);
+  el.addEventListener('pause', updateBtn);
+}
 
-  // Barra espaciadora
-  document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && !/input|textarea|select/i.test(e.target.tagName)) {
-      e.preventDefault();
-      if (audio.paused) { audio.play().catch(()=>{}); } else { audio.pause(); }
-      updateBtn();
-    }
+/* ====================== Render: main cards ====================== */
+function addResumen(block) {
+  const { el, content } = makeCard({
+    title: 'Resumen',
+    attrs: { tags: 'teatro musica danza plastica', log: '' }
   });
-
-  // Fallback de nombres de archivo
-  audio.addEventListener('error', () => {
-    if (currentSrcIdx < sources.length - 1) {
-      currentSrcIdx++;
-      setEncodedSrc(sources[currentSrcIdx]);
-      tryPlay();
-    } else {
-      alert('No se pudo cargar el audio. Verifica el nombre del archivo y su ubicación.');
-    }
-  });
-
-  // Pausar al cambiar de pestaña
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden && !audio.paused) audio.pause();
-  });
-})();
-
-/******************************
- *  Visores PDF (guion y partitura)
- ******************************/
-(function(){
-  function initPdfByIds(prefix){
-    const frame = document.getElementById(prefix === 'Part' ? 'pdfFramePart' : 'pdfFrame');
-    const view  = document.getElementById(prefix === 'Part' ? 'pdfViewPart' : 'pdfView');
-    const down  = document.getElementById(prefix === 'Part' ? 'pdfDownloadPart' : 'pdfDownload');
-    const fb    = document.getElementById(prefix === 'Part' ? 'pdfFallbackPart' : 'pdfFallback');
-
-    const defaultFile = prefix === 'Part'
-      ? 'Mi cuerpo es solo mio Partitura.pdf'
-      : 'Guión Escena I.pdf';
-
-    if (!frame || !view || !down || !fb) return;
-
-    const url = encodeURI(defaultFile);
-    view.href = url;
-    down.href = url;
-
-    fetch(url, { method: 'HEAD' })
-      .then(r => {
-        if (!r.ok) throw new Error('no disponible');
-        frame.src = url + '#toolbar=1&navpanes=0&statusbar=0&view=FitH';
-      })
-      .catch(() => {
-        frame.style.display = 'none';
-        fb.style.display = 'block';
-      });
+  if (block?.text) {
+    const p = document.createElement('p');
+    p.innerHTML = block.text;
+    content.appendChild(p);
   }
+  const tools = document.createElement('div');
+  tools.className = 'tools';
+  tools.innerHTML = pills([block?.duration && `Duración: ${block.duration}`, ...(block?.tags || [])].filter(Boolean));
+  content.appendChild(tools);
+  $('#col-main').appendChild(el);
+}
 
-  document.addEventListener('DOMContentLoaded', () => {
-    initPdfByIds('Guion');
-    initPdfByIds('Part');
+function addProposito(items) {
+  const { el, content } = makeCard({
+    title: '🎯 Propósito pedagógico',
+    attrs: { tags: 'teatro musica danza plastica', log: '' }
   });
+  content.appendChild(listFrom(items));
+  $('#col-main').appendChild(el);
+}
 
-  function initPdfBlock(block){
-    const filename = block.dataset.file || '';
-    if (!filename) return;
-
-    const url = encodeURI(filename);
-    const frame = block.querySelector('.js-frame') || block.querySelector('iframe');
-    const fb    = block.querySelector('.js-fallback') || block.querySelector('.pdf-fallback');
-
-    const card = block.closest('.card') || document;
-    const view = card.querySelector('.actions .js-view');
-    const down = card.querySelector('.actions .js-down');
-
-    if (view) view.href = url;
-    if (down) down.href = url;
-
-    fetch(url, { method: 'HEAD' })
-      .then(r => {
-        if (!r.ok) throw new Error('no disponible');
-        if (frame) frame.src = url + '#toolbar=1&navpanes=0&statusbar=0&view=FitH';
-      })
-      .catch(() => {
-        if (frame) frame.style.display = 'none';
-        if (fb) fb.style.display = 'block';
-      });
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.pdf-block[data-file]').forEach(initPdfBlock);
+function addPasos(items) {
+  const { el, content } = makeCard({
+    title: '🎭 Acción paso a paso',
+    attrs: { tags: 'teatro', log: '' }
   });
-})();
+  const ol = document.createElement('ol');
+  (items || []).forEach(t => { const li = document.createElement('li'); li.innerHTML = t; ol.appendChild(li); });
+  content.appendChild(ol);
+  $('#col-main').appendChild(el);
+}
 
-/******************************
- *  Filtros + búsqueda + recursos + docentes
- ******************************/
-(function(){
-  const $ = (sel, ctx=document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
-
-  const chips = $$('.chip');
-  const cards = $$('.card');
-  const q = $('#q');
-  const LS_KEY = 'escena1_filters_v3';
-
-  const RESOURCES = [
-    { title: 'Guión Escena I (PDF)', href: encodeURI('Guión Escena I.pdf'), areas: ['teatro','produccion'], type: 'pdf' },
-    { title: 'Partitura: Mi cuerpo es solo mío (PDF)', href: encodeURI('Mi cuerpo es solo mio Partitura.pdf'), areas: ['musica'], type: 'pdf' },
-    { title: 'Pista: Mi cuerpo es solo mío (MP3)', href: encodeURI('Mi cuerpo es solo mio.mp3'), areas: ['musica'], type: 'audio' }
-  ];
-  const ICON = { pdf:'📄', audio:'🎵', sheet:'📊', doc:'📝', link:'🔗' };
-
-  function renderResources(){
-    const ul = $('#res-list');
-    if (!ul) return;
-    const state = getActiveState();
-    const items = RESOURCES.filter(r =>
-      (!state.areas.length || r.areas.some(a => state.areas.includes(a)))
-    );
-    ul.innerHTML = items.map(r =>
-      `<li><a href="${r.href}" target="_blank" rel="noreferrer">${ICON[r.type]||ICON.link} ${r.title}</a>
-       <small class="muted">(${r.areas.join(', ')})</small></li>`
-    ).join('') || `<li class="muted">No hay recursos para este filtro.</li>`;
-  }
-
-  // ==== DOCENTES ====
-  const TEACHERS = [
-    { name: 'Angie Nitola',  url: 'docentes/brenda.html',  areas: ['teatro'],   centros: ['lucero','arroyo','padre'] },
-    { name: 'Erika López', url: 'docentes/yusting.html', areas: ['danza'],    centros: ['padre','arroyo','jerusalen'] },
-    { name: 'Leydy Díaz',    url: 'docentes/leydy.html',    areas: ['plastica'], centros: ['santodomingo','lucero','arroyo'] },
-    { name: 'Camila Pirajan',  url: 'docentes/camila.html',  areas: ['danza'],    centros: ['santodomingo','padre','jerusalen'] },
-    { name: 'Santiago Gutiérrez', url: 'docentes/santiago.html', areas: ['plastica'], centros: ['jerusalen','lucero','padre','colegio','gmmmc'] },
-  ];
-
-  function renderTeachers(){
-    const ul = document.getElementById('teachers-list');
-    if (!ul) return;
-    const state = getActiveState();
-    const items = TEACHERS.filter(t => {
-      const byArea   = !state.areas.length || t.areas.some(a => state.areas.includes(a));
-      const byCentro = !state.centros.length || t.centros.some(c => state.centros.includes(c));
-      const byQuery  = !state.query || (t.name.toLowerCase().includes(state.query.toLowerCase()));
-      return byArea && byCentro && byQuery;
+function addImagenPlastica(block) {
+  const { el, content } = makeCard({
+    title: '🎨 Imagen plástica en escena',
+    attrs: { tags: 'plastica teatro', log: 'materiales' }
+  });
+  if (block?.items) content.appendChild(listFrom(block.items));
+  if (block?.assets?.length) {
+    const grid = document.createElement('div'); grid.className = 'stage-assets';
+    block.assets.forEach(a => {
+      const c = document.createElement('div'); c.className = 'asset';
+      c.innerHTML = `
+        <a href="${a.src}" target="_blank" rel="noreferrer">
+          <img src="${a.src}" alt="${a.alt || ''}">
+        </a>`;
+      grid.appendChild(c);
     });
-    ul.innerHTML = items.map(t => `
-      <li><a href="${t.url}" target="_blank" rel="noreferrer">${t.name}</a>
-      <span class="teacher-tags">${t.areas.join(', ')}</span></li>
-    `).join('') || `<li class="muted">No hay docentes para este filtro/búsqueda.</li>`;
+    content.appendChild(grid);
   }
+  $('#col-main').appendChild(el);
+}
 
-  // ==== Estado / Filtros ====
-  function getParams(){
-    const p = new URLSearchParams(location.search);
-    const getList = k => (p.get(k)||'').split(',').map(s=>s.trim()).filter(Boolean);
-    const areas = getList('areas');
-    const centros = getList('centros');
-    const logs = getList('logs');
-    const query = (p.get('q')||'').trim();
-    return {areas, centros, logs, query};
-  }
-
-  function getActiveState(){
-    const areas = chips.filter(c => c.dataset.type==='area' && c.classList.contains('active')).map(c => c.dataset.area);
-    const centros = chips.filter(c => c.dataset.type==='centro' && c.classList.contains('active')).map(c => c.dataset.centro);
-    const logs = chips.filter(c => c.dataset.type==='log' && c.classList.contains('active')).map(c => c.dataset.log);
-    return { areas, centros, logs, query: (q && q.value ? q.value.trim() : '') };
-  }
-
-  function saveState(){
-    const state = getActiveState();
-    localStorage.setItem(LS_KEY, JSON.stringify(state));
-  }
-
-  function cardMatches(card, state){
-    const tags = (card.dataset.tags || 'general').split(/\s+/);
-    const areaOk = (state.areas.length === 0) || state.areas.some(a => tags.includes(a));
-
-    const centrosCard = (card.dataset.centros || '').split(/\s+/).filter(Boolean);
-    const centroOk = (state.centros.length === 0) || state.centros.some(c => centrosCard.includes(c));
-
-    const logsCard = (card.dataset.log || '').split(/\s+/).filter(Boolean);
-    const logOk = (state.logs.length === 0) || state.logs.some(l => logsCard.includes(l));
-
-    const textOk = (card.textContent||'').toLowerCase().includes(state.query.toLowerCase());
-    return areaOk && centroOk && logOk && textOk;
-  }
-
-  function filterNow(){
-    const state = getActiveState();
-    let visibleCount = 0;
-
-    cards.forEach(card => {
-      const show = cardMatches(card, state);
-      card.style.display = show ? '' : 'none';
-      if (show) visibleCount++;
-    });
-
-    if (visibleCount === 0 && (state.areas.length || state.centros.length || state.logs.length)){
-      cards.forEach(card => {
-        const tags = (card.dataset.tags || '').split(/\s+/);
-        const centrosCard = (card.dataset.centros || '').split(/\s+/);
-        const logsCard = (card.dataset.log || '').split(/\s+/);
-        const showGeneral = tags.includes('general') ||
-          (!state.centros.length || state.centros.some(c=>centrosCard.includes(c))) ||
-          (!state.logs.length || state.logs.some(l=>logsCard.includes(l)));
-        card.style.display = showGeneral ? '' : 'none';
-      });
-    }
-
-    renderResources();
-    renderTeachers();
-    saveState();
-  }
-
-  function applyState({areas=[], centros=[], logs=[], query=''}){
-    chips.forEach(ch => {
-      const t = ch.dataset.type;
-      if (t === 'area') ch.classList.toggle('active', areas.includes(ch.dataset.area));
-      if (t === 'centro') ch.classList.toggle('active', centros.includes(ch.dataset.centro));
-      if (t === 'log') ch.classList.toggle('active', logs.includes(ch.dataset.log));
-    });
-    if (q) q.value = query || '';
-    filterNow();
-  }
-
-  function loadState(){
-    const byUrl = getParams();
-    if (byUrl.areas.length || byUrl.centros.length || byUrl.logs.length || byUrl.query){
-      applyState(byUrl);
-      return;
-    }
-    try{
-      const saved = JSON.parse(localStorage.getItem(LS_KEY) || '{}');
-      applyState({
-        areas: saved.areas || [],
-        centros: saved.centros || [],
-        logs: saved.logs || [],
-        query: saved.query || ''
-      });
-    }catch{}
-  }
-
-  // Eventos
-  chips.forEach(chip => chip.addEventListener('click', () => { chip.classList.toggle('active'); filterNow(); }));
-  if (q) q.addEventListener('input', filterNow);
-
-  document.addEventListener('DOMContentLoaded', () => {
-    renderResources();
-    renderTeachers();
-    loadState();
+function addLuces(rows) {
+  const { el, content } = makeCard({
+    title: '🎛️ Luces y transiciones',
+    attrs: { tags: 'luces', log: 'luces' }
   });
-})();
+  content.appendChild(tableFrom(rows, ['Cue', 'Estado', 'Detalle']));
+  $('#col-main').appendChild(el);
+}
 
-/******************************
- *  Vista previa de imágenes
- ******************************/
-(function(){
-  function ensureOverlay(){
-    let o = document.getElementById('imgPreviewOverlay');
-    if (!o){
-      o = document.createElement('div');
-      o.id = 'imgPreviewOverlay';
-      o.style.position = 'fixed';
-      o.style.inset = '0';
-      o.style.display = 'none';
-      o.style.zIndex = '9999';
-      o.style.background = 'rgba(0,0,0,.85)';
-      o.style.alignItems = 'center';
-      o.style.justifyContent = 'center';
-
-      const img = document.createElement('img');
-      img.alt = 'Vista previa';
-      img.style.maxWidth = '90vw';
-      img.style.maxHeight = '90vh';
-      img.style.borderRadius = '12px';
-      img.style.boxShadow = '0 10px 30px rgba(0,0,0,.5)';
-
-      o.appendChild(img);
-      document.body.appendChild(o);
-
-      o.addEventListener('click', () => o.style.display='none');
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') o.style.display='none'; });
-    }
-    return o;
-  }
-
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[data-preview]');
-    if (!a) return;
-    e.preventDefault();
-    const overlay = ensureOverlay();
-    overlay.querySelector('img').src = a.getAttribute('href');
-    overlay.style.display = 'flex';
+function addSonido(items) {
+  const { el, content } = makeCard({
+    title: '🔊 Requerimientos de sonido',
+    attrs: { tags: 'musica', log: 'sonido amplificacion-coro diademas orquesta proyeccion' }
   });
+  content.appendChild(listFrom(items));
+  $('#col-main').appendChild(el);
+}
+
+function addVestuario(v) {
+  const { el, content } = makeCard({
+    title: '👗 Vestuario (visual y detalle)',
+    attrs: { tags: 'plastica teatro danza', log: 'vestuario' }
+  });
+  // Solo galería de imágenes (sin tabla ni textos)
+  if (v?.images?.length) {
+    const grid = document.createElement('div');
+    grid.className = 'stage-assets';
+    v.images.forEach(a => {
+      const c = document.createElement('div');
+      c.className = 'asset';
+      c.innerHTML = `
+        <a href="${a.src}" target="_blank" rel="noreferrer">
+          <img src="${a.src}" alt="${a.alt || a.title || ''}">
+        </a>`;
+      grid.appendChild(c);
+    });
+    content.appendChild(grid);
+  }
+  $('#col-main').appendChild(el);
+}
+
+/* NEW: Escenario (fotos) */
+function addEscenario(block) {
+  const { el, content } = makeCard({
+    title: '🖼️ Escenario (fotos)',
+    attrs: { tags: 'teatro produccion', log: 'proyeccion materiales' }
+  });
+  if (block?.images?.length) {
+    const grid = document.createElement('div');
+    grid.className = 'stage-assets';
+    block.images.forEach(a => {
+      const c = document.createElement('div');
+      c.className = 'asset';
+      c.innerHTML = `
+        <a href="${a.src}" target="_blank" rel="noreferrer">
+          <img src="${a.src}" alt="${a.alt || a.title || 'Foto de escenario'}">
+        </a>`;
+      grid.appendChild(c);
+    });
+    content.appendChild(grid);
+  }
+  $('#col-main').appendChild(el);
+}
+
+function addChecklist(items) {
+  const { el, content } = makeCard({
+    title: '✅ Checklist (pre-ensayo y función)',
+    attrs: { tags: 'produccion', log: '' }
+  });
+  const ul = listFrom(items); ul.id = 'checklist';
+  const actions = document.createElement('div'); actions.className = 'actions';
+  const b1 = document.createElement('button'); b1.className = 'btn'; b1.textContent = '🖨️ Imprimir'; b1.onclick = () => window.print();
+  const b2 = document.createElement('button'); b2.className = 'btn'; b2.textContent = '📋 Copiar'; b2.onclick = () => {
+    const txt = $$('#checklist li').map(li => li.textContent.trim()).join('\n') || '';
+    navigator.clipboard.writeText(txt); alert('Checklist copiada.');
+  };
+  actions.append(b1, b2);
+  content.append(ul, actions);
+  $('#col-main').appendChild(el);
+}
+
+function addPdfBlock(key, title, file) {
+  // etiquetas por tipo de PDF
+  const tagMap = {
+    guion:  { tags: 'teatro produccion', log: '' },
+    part:   { tags: 'musica',            log: '' }
+  };
+  const meta = tagMap[key] || { tags: '', log: '' };
+
+  const { el, content } = makeCard({ title, attrs: meta });
+  const url = encodeURI(file);
+  content.innerHTML = `
+    <div class="actions">
+      <a class="btn" href="${url}" target="_blank" rel="noreferrer">👁️ Ver</a>
+      <a class="btn" href="${url}" download>⬇ Descargar</a>
+    </div>
+    <iframe class="pdf-frame" loading="lazy" title="${title}"></iframe>
+    <p class="note" id="fb-${key}" style="display:none">Visor bloqueado. Usa los botones de arriba.</p>`;
+  const frame = content.querySelector('iframe');
+  fetch(url, { method: 'HEAD' })
+    .then(r => { if (!r.ok) throw 0; frame.src = url + '#toolbar=1&navpanes=0&statusbar=0&view=FitH'; })
+    .catch(() => { frame.style.display = 'none'; content.querySelector(`#fb-${key}`).style.display = 'block'; });
+  $('#col-main').appendChild(el);
+}
+
+/* ====================== Render: aside ====================== */
+function asideCentros(block) {
+  const { el, content } = makeCard({ title: '👥 Centros y responsables' });
+  if (block?.items) content.appendChild(listFrom(block.items));
+  if (block?.docentesText) {
+    const p = document.createElement('p'); p.className = 'muted'; p.textContent = block.docentesText;
+    content.appendChild(p);
+  }
+  $('#col-aside').appendChild(el);
+}
+
+function asideMateriales(items) {
+  const { el, content } = makeCard({ title: '📦 Materiales clave' });
+  content.appendChild(listFrom(items));
+  $('#col-aside').appendChild(el);
+}
+
+function asideRecursos(items) {
+  const { el, content } = makeCard({ title: '📂 Recursos por arte' });
+  const ul = document.createElement('ul'); ul.style.listStyle = 'none'; ul.style.paddingLeft = '0';
+  (items || []).forEach(r => {
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="${encodeURI(r.href)}" target="_blank" rel="noreferrer">${r.icon || '🔗'} ${r.title}</a> <small class="muted">(${(r.areas || []).join(', ')})</small>`;
+    ul.appendChild(li);
+  });
+  content.appendChild(ul);
+  $('#col-aside').appendChild(el);
+}
+
+function asideDocentes(block) {
+  const { el, content } = makeCard({ title: '👩‍🏫 Docentes' });
+  const ul = document.createElement('ul'); ul.style.listStyle = 'none'; ul.style.paddingLeft = '0';
+  (block?.items || []).forEach(d => {
+    const li = document.createElement('li');
+    li.style.display = 'flex'; li.style.justifyContent = 'space-between';
+    li.style.borderBottom = '1px solid #eee'; li.style.padding = '6px 0';
+    li.innerHTML = `<a href="${d.url}" target="_blank" rel="noreferrer">${d.name}</a><span class="teacher-tags">${(d.areas || []).join(', ')}</span>`;
+    ul.appendChild(li);
+  });
+  content.appendChild(ul);
+  $('#col-aside').appendChild(el);
+}
+
+function asideGlosario(items) {
+  const { el, content } = makeCard({ title: '🧠 Glosario breve' });
+  (items || []).forEach(x => {
+    const p = document.createElement('p');
+    p.innerHTML = `<span class="kbd">${x.term}</span>: ${x.def}`;
+    content.appendChild(p);
+  });
+  $('#col-aside').appendChild(el);
+}
+
+/* ====================== Init ====================== */
+(async function init() {
+  try {
+    const cfg = await loadConfig();
+
+    // Top & portada & audio
+    renderTop(cfg.meta || {});
+    renderAudio(cfg.audio);
+
+    // Chips
+    buildChipList('#chips-areas',   cfg.filters?.areas   || [], 'area');
+    buildChipList('#chips-centros', cfg.filters?.centros || [], 'centro');
+    buildChipList('#chips-log',     cfg.filters?.log     || [], 'log');
+    $('#q')?.addEventListener('input', applyFilters);
+
+    // Main
+    if (cfg.resumen)   addResumen(cfg.resumen);
+    if (cfg.proposito) addProposito(cfg.proposito);
+    if (cfg.pasos)     addPasos(cfg.pasos);
+    if (cfg.plastica)  addImagenPlastica(cfg.plastica);
+    if (cfg.luces)     addLuces(cfg.luces);
+    if (cfg.sonido)    addSonido(cfg.sonido);
+    if (cfg.vestuario) addVestuario(cfg.vestuario);
+    if (cfg.escenario) addEscenario(cfg.escenario);
+    if (cfg.checklist) addChecklist(cfg.checklist);
+    if (cfg.pdfs?.guion)     addPdfBlock('guion', '📄 Guión de la escena (PDF)', cfg.pdfs.guion);
+    if (cfg.pdfs?.partitura) addPdfBlock('part',  '🎼 Partitura (PDF)',          cfg.pdfs.partitura);
+
+    // Aside
+    if (cfg.centros)    asideCentros(cfg.centros);
+    if (cfg.materiales) asideMateriales(cfg.materiales);
+    if (cfg.recursos)   asideRecursos(cfg.recursos);
+    if (cfg.docentes)   asideDocentes(cfg.docentes);
+    if (cfg.glosario)   asideGlosario(cfg.glosario);
+
+    // Aplicar filtros (inicial)
+    applyFilters();
+  } catch (e) {
+    console.error(e);
+  }
 })();
