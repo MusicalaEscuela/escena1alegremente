@@ -45,7 +45,7 @@
   ]
   },
   "luces": [
-    { "Cue": "<b>L1 – Inicio</b>", "Estado": "Oscuro + spot neutro", "Detalle": "Sol gris sin iluminación directa." },
+    { "Cue": "<b>L1 – Inicio</b>", "Estado": "Oscuro + spot neutro, blackout parcial y luz en el medio", "Detalle": "Sol gris sin iluminación directa." },
     { "Cue": "<b>L2 – Tensión</b>", "Estado": "Strobe sutil", "Detalle": "Uso breve durante el acecho (avisado)." },
     { "Cue": "<b>L3 – Círculo protector</b>", "Estado": "Lavado cálido", "Detalle": "Entrada de carteles y rayos." },
     { "Cue": "<b>L4 – Resolución</b>", "Estado": "Cálido brillante en sol", "Detalle": "Tras la frase de Sofía; activar luz de silueta." }
@@ -111,3 +111,4 @@
     {"term":"strobe","def":"luz intermitente (usar con precaución)"}
   ]
 }
+
