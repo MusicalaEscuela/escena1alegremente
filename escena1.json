@@ -36,7 +36,7 @@
   ],
   "plastica": {
   "items": [
-    "<strong>Elementos en escenario:</strong> sol transformable con CDs y rayos de colores.",
+    "<strong>Elementos en escenario:</strong> sol transformable con CDs y rayos de colores. Que se pueda posicionar en el suelo, como un sol naciente, para evitar tener que colgarlo en el escenario",
     "<strong>Silueta iluminada de Sofía</strong> (figura/tela con luz interna tenue).",
     "<strong>Acción simbólica:</strong> cada niño agrega un “rayo” de color al círculo."
   ],
@@ -111,4 +111,5 @@
     {"term":"strobe","def":"luz intermitente (usar con precaución)"}
   ]
 }
+
 
