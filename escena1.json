@@ -86,7 +86,7 @@
     "partitura": "Mi cuerpo es solo mio Partitura.pdf"
   },
   "centros": {
-    "items": ["<b>Teatro:</b> Lucero","<b>Danza:</b> Padre Misericordioso A","<b>Artes plásticas:</b> GMMMC"],
+    "items": ["<b>Teatro:</b> Lucero","<b>Artes plásticas:</b> GMMMC"],
     "docentesText": "Docentes responsables: Angie Nitola."
   },
   "materiales": [
@@ -111,5 +111,6 @@
     {"term":"strobe","def":"luz intermitente (usar con precaución)"}
   ]
 }
+
 
 
