@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "AlegreMente 2025 · Escena 1",
-    "subtitle": "El sol no canta / Mi cuerpo es solo mío",
+    "subtitle": "Mi cuerpo es solo mío",
     "footer": "AlegreMente 2025 · Escena 1 · Guía práctica",
     "images": {
       "hero": "Escena 1.jpg",
@@ -111,6 +111,7 @@
     {"term":"strobe","def":"luz intermitente (usar con precaución)"}
   ]
 }
+
 
 
 
