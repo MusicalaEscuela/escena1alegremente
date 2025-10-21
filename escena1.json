@@ -97,7 +97,8 @@
   "recursos": [
     {"title":"Guión Escena I (PDF)", "href":"Guión Escena I.pdf", "areas":["teatro","produccion"], "icon":"📄"},
     {"title":"Partitura – Mi cuerpo es solo mío (PDF)", "href":"Mi cuerpo es solo mio Partitura.pdf", "areas":["musica"], "icon":"🎼"},
-    {"title":"Pista – Mi cuerpo es solo mío (MP3)", "href":"Mi cuerpo es solo mio.mp3", "areas":["musica"], "icon":"🎵"}
+    {"title":"Pista – Mi cuerpo es solo mío (MP3)", "href":"Mi cuerpo es solo mio.mp3", "areas":["musica"], "icon":"🎵"},
+    { "title": "Ensayo Danzas y Teatro - GMMMC y Lucero (oct)", "href": "https://www.youtube.com/watch?v=FXvqWjA1H80", "areas": ["danza","teatro"], "icon": "▶️" }
   ],
   "docentes": {
     "hint": "Sugerencia: cada docente puede tener su mini guía con materiales y tareas.",
@@ -111,6 +112,7 @@
     {"term":"strobe","def":"luz intermitente (usar con precaución)"}
   ]
 }
+
 
 
 
